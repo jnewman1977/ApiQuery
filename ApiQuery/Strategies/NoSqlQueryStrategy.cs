@@ -1,32 +1,46 @@
 namespace ApiQuery.Strategies;
 
 using ApiQuery.Model;
+using MongoDB.Bson;
+using MongoDB.Driver;
 
 public class NoSqlQueryStrategy : IQueryStrategy
 {
     public string BuildQuery(List<Filter> filters, List<Sort> sorts)
     {
-        var query = "{ $and: [";
-        var conditions = new List<string>();
+        FilterDefinitionBuilder<BsonDocument>? filterBuilder = Builders<BsonDocument>.Filter;
+        var filterConditions = new List<FilterDefinition<BsonDocument>>();
 
-        foreach (var filter in filters)
+        foreach (var filterItem in filters)
         {
-            conditions.Add($"{{ {filter.Field}: {{ {filter.Operator}: '{filter.Value}' }} }}");
+            FilterDefinition<BsonDocument>? condition = filterBuilder.Eq(filterItem.Field, filterItem.Value);
+            filterConditions.Add(condition);
         }
 
-        query += string.Join(", ", conditions) + "] }";
+        FilterDefinition<BsonDocument>? filter = filterBuilder.And(filterConditions);
 
-        if (sorts.Any())
+        SortDefinitionBuilder<BsonDocument>? sortBuilder = Builders<BsonDocument>.Sort;
+        var sortConditions = new List<SortDefinition<BsonDocument>>();
+
+        foreach (Sort sortItem in sorts)
         {
-            var sortConditions = new List<string>();
-            foreach (var sort in sorts)
-            {
-                int direction = sort.Direction == "DESC" ? -1 : 1;
-                sortConditions.Add($"{{ {sort.Field}: {direction} }}");
-            }
-            query += ", $sort: { " + string.Join(", ", sortConditions) + " }";
+            SortDefinition<BsonDocument>? sortCondition = sortBuilder.Combine(
+                sortBuilder.MetaTextScore(sortItem.Field),
+                sortItem.Direction == "DESC"
+                    ? sortBuilder.MetaSearchScoreDescending()
+                    : sortBuilder.MetaSearchScoreAscending());
+
+            sortConditions.Add(sortCondition);
         }
 
-        return query;
+        SortDefinition<BsonDocument>? sort = sortBuilder.Combine(sortConditions);
+
+        // Here you would use the filter and sort with a MongoDB query
+        // Example:
+        // var collection = database.GetCollection<BsonDocument>("collectionName");
+        // var result = collection.Find(filter).Sort(sort).ToList();
+
+        // For demonstration purposes, returning the filter and sort as JSON
+        return filter.ToJson() + ", " + sort.ToJson(); 
     }
 }
