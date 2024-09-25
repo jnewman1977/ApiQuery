@@ -5,7 +5,7 @@ using ApiQuery.Model;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-public class NoSqlQueryStrategy : IQueryStrategy
+public class NoSqlQueryOutputStrategy : IQueryOutputStrategy
 {
     public string BuildQuery(List<Filter> filters, List<Sort> sorts)
     {

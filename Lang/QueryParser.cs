@@ -5,7 +5,7 @@ using Antlr4.Runtime;
 public partial class QueryParser
 {
     public static string ParseQuery<T>(string input)
-        where T : class, IQueryStrategy, new()
+        where T : class, IQueryOutputStrategy, new()
     {
         var inputStream = new AntlrInputStream(input);
         var lexer = new QueryLexer(inputStream);
