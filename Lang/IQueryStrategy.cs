@@ -1,4 +1,4 @@
-namespace ApiQuery.Strategies;
+namespace ApiQuery.Lang;
 
 using ApiQuery.Model;
 

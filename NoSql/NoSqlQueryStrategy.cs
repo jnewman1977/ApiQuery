@@ -1,5 +1,6 @@
-namespace ApiQuery.Strategies;
+namespace ApiQuery.NoSql;
 
+using ApiQuery.Lang;
 using ApiQuery.Model;
 using MongoDB.Bson;
 using MongoDB.Driver;

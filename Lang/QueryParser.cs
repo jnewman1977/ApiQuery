@@ -1,12 +1,11 @@
-namespace ApiQuery;
+namespace ApiQuery.Lang;
 
 using Antlr4.Runtime;
-using ApiQuery.Strategies;
-using ApiQuery.Visitors;
 
 public partial class QueryParser
 {
-    public static string ParseNoSqlQuery(string input)
+    public static string ParseQuery<T>(string input)
+        where T : class, IQueryStrategy, new()
     {
         var inputStream = new AntlrInputStream(input);
         var lexer = new QueryLexer(inputStream);
@@ -17,7 +16,7 @@ public partial class QueryParser
         var visitor = new QueryVisitor();
         visitor.Visit(context);
 
-        var strategy = new NoSqlQueryStrategy();
+        var strategy = new T();
         return strategy.BuildQuery(visitor.Filters, visitor.Sorts);
     }
 }

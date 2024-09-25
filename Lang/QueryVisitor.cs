@@ -1,4 +1,4 @@
-namespace ApiQuery.Visitors;
+namespace ApiQuery.Lang;
 
 using Antlr4.Runtime.Misc;
 using ApiQuery.Model;

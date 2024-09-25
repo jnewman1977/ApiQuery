@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AssemblyName>ApiQuery.Model</AssemblyName>
+        <RootNamespace>ApiQuery.Model</RootNamespace>
+    </PropertyGroup>
+
+</Project>
